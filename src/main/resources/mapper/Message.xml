@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fishcc.bbs.dao.MessageDao">
+    <insert id="insertMessage" parameterType="org.fishcc.bbs.entity.Message">
+        insert into message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          id,
+          <if test="replyId!=null and replyId!=''">replyId,</if>
+          userId,
+          text,
+          pageId,
+          floorNumber,
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+          #{id},
+          <if test="replyId!=null and replyId!=''">#{replyId},</if>
+          #{user.id},
+          #{text},
+          #{myPage.id},
+          #{floorNumber},
+        </trim>
+    </insert>
+    <delete id="deleteMessage" parameterType="java.lang.String">
+        delete from message where id = #{id}
+    </delete>
+    <update id="updateMessage" parameterType="org.fishcc.bbs.entity.Message">
+        update message
+        <trim prefix="set" suffixOverrides=",">
+          <if test="read!=null">haveRead=#{read},</if>
+          <if test="invalid!=null">invalid=#{invalid},</if>
+        </trim>
+        where id=#{id}
+    </update>
+    <select id="selectMessageById" parameterType="java.lang.String" resultMap="messageMap"> 
+        select * from message where id=#{id}
+    </select>
+    <select id="selectMessageListByPageId" parameterType="java.lang.String" resultMap="messageMap"> 
+        select message.id,userId,text,name,pageId,from_unixtime(unix_timestamp(message.date),'%Y-%m-%d %H:%i') as date,floorNumber from message,user where pageId = #{id} and message.userId = user.id order by floorNumber
+    </select>
+    <resultMap type="org.fishcc.bbs.entity.Message" id="messageMap">
+        <result property="id" column="id"/>
+        <result property="replyId" column="replyId"/>
+        <result property="date" column="date"/>
+        <result property="text" column="text"/>
+        <result property="floorNumber" column="floorNumber"/>
+        <result property="read" column="haveRead"/>
+        <result property="invalid" column="invalid"/>
+        <association property="user" javaType="org.fishcc.bbs.entity.User">
+	        <result property="id" column="userId"/>
+	        <result property="name" column="name"/>
+        </association>
+        <association property="myPage" javaType="org.fishcc.bbs.entity.MyPage">
+	        <result property="id" column="pageId"/>
+        </association>
+    </resultMap>
+</mapper>

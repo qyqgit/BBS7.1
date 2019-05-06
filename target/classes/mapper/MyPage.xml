@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fishcc.bbs.dao.MyPageDao">
+    <insert id="insertMyPage" parameterType="org.fishcc.bbs.entity.MyPage">
+        insert into myPage(id,title,text,userId) values (#{id},#{title},#{text},#{user.id})
+    </insert>
+    <delete id="deleteMyPage" parameterType="java.lang.String">
+        delete from myPage where id = #{id}
+    </delete>
+    <update id="updateMyPage" parameterType="org.fishcc.bbs.entity.MyPage">
+        update myPage
+        <trim prefix="set" suffixOverrides=",">
+          <if test="title!=null">title=#{title},</if>
+          <if test="text!=null">text=#{text},</if>
+          <if test="messageNumber!=null">messageNumber=#{messageNumber},</if>
+          <if test="invalid!=null">invalid=#{invalid},</if>
+        </trim>
+        where id=#{id}
+    </update>
+    <select id="selectMyPageById" parameterType="java.lang.String" resultMap="myPageMap"> 
+        select mypage.id,title,createDate,text,userId,name,timeStamp,messageNumber,mypage.invalid from mypage,user where mypage.id = #{id} and mypage.userId = user.id
+    </select>
+    <select id="selectMyPageList" resultMap="myPageMap"> 
+        select mypage.id,title,createDate,text,userId,name,timeStamp,messageNumber,mypage.invalid from mypage,user where mypage.userId=user.id order by mypage.timeStamp desc
+    </select>
+    <resultMap type="org.fishcc.bbs.entity.MyPage" id="myPageMap">
+       <result property="id" column="id"/>
+       <result property="title" column="title"/>
+       <result property="createDate" column="createDate"/>
+       <result property="text" column="text"/>
+       <result property="timeStamp" column="timeStamp"/>
+       <result property="messageNumber" column="messageNumber"/>
+       <result property="invalid" column="invalid"/>
+       <association property="user" javaType="org.fishcc.bbs.entity.User" resultMap="userMap"/>
+    </resultMap>
+    <resultMap type="org.fishcc.bbs.entity.User" id="userMap">
+       <result property="id" column="userId"/>
+       <result property="name" column="name"/>
+    </resultMap>
+</mapper>
