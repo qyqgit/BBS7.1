@@ -14,15 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class MessageController {
-    @Resource(name="message")
-    private Message message;
-    @Resource(name="myPage")
-    private MyPage myPage;
     @Resource(name="messageService")
     private MessageService messageService;
     
     @RequestMapping("/sendMessage.form")
-    public String sendMessage(HttpServletRequest request) {
+    public String sendMessage(HttpServletRequest request, MyPage myPage, Message message) {
         myPage.setId(request.getParameter("id"));
         message.setId(UUID.randomUUID().toString());
         message.setUser((User)request.getSession().getAttribute("user"));

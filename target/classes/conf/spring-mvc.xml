@@ -22,9 +22,6 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
     <context:component-scan base-package="org.fishcc.bbs.service"></context:component-scan>
     <context:component-scan base-package="org.fishcc.bbs.controller"></context:component-scan>
-    <bean id="user" class="org.fishcc.bbs.entity.User" scope="prototype"></bean>
-    <bean id="myPage" class="org.fishcc.bbs.entity.MyPage" scope="prototype"></bean>
-    <bean id="message" class="org.fishcc.bbs.entity.Message" scope="prototype"></bean>
     <bean id="formatDate" class="java.text.SimpleDateFormat">
         <constructor-arg value="yyyy/MM/dd"/>
     </bean>

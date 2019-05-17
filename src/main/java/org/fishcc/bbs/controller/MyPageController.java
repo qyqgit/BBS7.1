@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class MyPageController {
-    @Resource(name="myPage")
-    private MyPage myPage;
     @Resource(name="myPageService")
     private MyPageService myPageService;
     @Resource(name="messageService")
@@ -33,7 +31,7 @@ public class MyPageController {
         return "index.jsp";
     }
     @RequestMapping("/sendMyPage.form")
-    public String sendMyPage(HttpServletRequest request) {
+    public String sendMyPage(HttpServletRequest request, MyPage myPage) {
         myPage.setId(UUID.randomUUID().toString());
         myPage.setTitle(request.getParameter("title").trim());
         myPage.setText(request.getParameter("text").trim());

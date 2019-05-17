@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class UserController {
-    @Resource(name="user")
-    private User user;
     @Resource(name="userService")
     private UserService userService;
     
     @RequestMapping("/register.form")
-    public String registerUser(HttpServletRequest request) {
+    public String registerUser(HttpServletRequest request, User user) {
         user.setId(UUID.randomUUID().toString());
         user.setName(request.getParameter("name").trim());
         user.setPassword(DigestUtils.md5DigestAsHex(request.getParameter("password").getBytes()));
@@ -42,7 +40,7 @@ public class UserController {
             response.getWriter().println("already registered!");
     }
     @RequestMapping("/login.form")
-    public String login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String login(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
         user.setName(request.getParameter("name").trim());
         user.setPassword(DigestUtils.md5DigestAsHex(request.getParameter("password").getBytes()));
         if(userService.loginSuccess(user)) {
@@ -66,7 +64,7 @@ public class UserController {
         return "Home.jsp";
     }
     @RequestMapping("/updateUser.form")
-    public String updateUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String updateUser(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
         if(!((User)request.getSession().getAttribute("user")).getId().equalsIgnoreCase(request.getParameter("id")))
             return "redirect:/home.form?id=" + request.getParameter("id");
         user.setId(request.getParameter("id"));
